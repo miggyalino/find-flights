@@ -16,10 +16,15 @@ import {
 interface DatePickerProps {
   title: string;
   disabled?: boolean;
+  onDateChange: (date: Date | undefined) => void;
 }
 
-export function DatePicker({ title, disabled }: DatePickerProps) {
+export function DatePicker({ title, disabled, onDateChange }: DatePickerProps) {
   const [date, setDate] = React.useState<Date>();
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    onDateChange(newDate);
+  };
 
   return (
     <Popover>
@@ -40,7 +45,7 @@ export function DatePicker({ title, disabled }: DatePickerProps) {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateChange}
           initialFocus
         />
       </PopoverContent>

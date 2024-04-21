@@ -41,14 +41,11 @@ const BookFlight = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="mt-8">
-        {formState === "One-way" && <FlightForm isOneWay={true} />}
-        {formState === "Round Trip" && <FlightForm />}
+        {formState === "One-way" && (
+          <FlightForm isOneWay={true} flightType={formState} />
+        )}
+        {formState === "Round Trip" && <FlightForm flightType={formState} />}
       </CardContent>
-      <CardFooter>
-        <Button size="lg" className="text-md">
-          Book Flight
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

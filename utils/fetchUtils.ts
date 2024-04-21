@@ -1,18 +1,17 @@
-const fetchAirports = async (input: String) => {
+export const fetchAirports = async () => {
   try {
     const response = await fetch(
-      `https://airport-info.p.rapidapi.com/airport?iata=${input}`,
+      `https://api.api-ninjas.com/v1/airports?country=PH`,
       {
         method: "GET",
         headers: {
-          "X-RapidAPI-Key":
-            "83cff150e6msh10100999645ba28p1e74f5jsn982b41d5cbb5",
-          "X-RapidAPI-Host": "airport-info.p.rapidapi.com",
+          "X-Api-Key": "mXeEx3dW7M26VlhkKKHDSw==CsoOICzS5RkYtSo6",
+          "Content-Type": "application/json",
         },
       }
     );
     const result = await response.json();
-    console.log(result);
+    return result;
   } catch (error) {
     console.error(error);
   }

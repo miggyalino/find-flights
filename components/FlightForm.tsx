@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { DatePicker } from "./ui/date-picker";
@@ -9,34 +9,98 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { fetchAirports } from "@/utils/fetchUtils";
+import { Airport } from "@/types";
+import { get } from "http";
+import { Button } from "./ui/button";
 
 interface FlightFormProps {
   isOneWay?: boolean;
+  flightType: string;
 }
 
-const FlightForm = ({ isOneWay }: FlightFormProps) => {
+const FlightForm = ({ isOneWay, flightType }: FlightFormProps) => {
+  const [airports, setAirports] = useState<Airport[]>([]);
+
+  const [departureAirport, setDepartureAirport] = useState<string>("");
+  const [arrivalAirport, setArrivalAirport] = useState<string | null>("");
+  const [departureDate, setDepartureDate] = useState<Date>();
+  const [returnDate, setReturnDate] = useState<Date | null>();
+  const [departureTime, setDepartureTime] = useState<string>("");
+  const [returnTime, setReturnTime] = useState<string | null>();
+  const [age, setAge] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchAirportsData = async () => {
+      const airportsData = await fetchAirports();
+      setAirports(airportsData);
+    };
+
+    fetchAirportsData();
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    try {
+      event.preventDefault();
+      await fetch("/api/flights", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          origin: departureAirport,
+          destination: arrivalAirport,
+          departureDate,
+          returnDate,
+          departureTime,
+          returnTime,
+          age,
+          flightType,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDepartureDateChange = (newDate: Date | undefined) => {
+    setDepartureDate(newDate);
+  };
+
+  const handleArrivalDateChange = (newDate: Date | undefined) => {
+    setDepartureDate(newDate);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="form-row">
         <div className="form-group">
           <Label>From</Label>
-          <Select>
+          <Select onValueChange={(value) => setDepartureAirport(value)}>
             <SelectTrigger className="w-[17.5rem]">
               <SelectValue placeholder="Departure Airport" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="11:00 AM AST">11:00 AM AST</SelectItem>
+              {airports.map((airportItem) => (
+                <SelectItem key={airportItem.icao} value={airportItem.name}>
+                  {airportItem.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
         <div className="form-group">
           <Label>To</Label>
-          <Select>
+          <Select onValueChange={(value) => setArrivalAirport(value)}>
             <SelectTrigger className="w-[17.5rem]">
               <SelectValue placeholder="Arrival Airport" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="11:00 AM AST">11:00 AM AST</SelectItem>
+              {airports.map((airportItem) => (
+                <SelectItem key={airportItem.icao} value={airportItem.name}>
+                  {airportItem.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -44,17 +108,24 @@ const FlightForm = ({ isOneWay }: FlightFormProps) => {
       <div className="form-row">
         <div className="form-group">
           <Label>Departure</Label>
-          <DatePicker title="Set Departure Date" />
+          <DatePicker
+            title="Set Departure Date"
+            onDateChange={handleDepartureDateChange}
+          />
         </div>
         <div className="form-group">
           <Label>Return</Label>
-          <DatePicker title="Set Return Date" disabled={isOneWay} />
+          <DatePicker
+            title="Set Return Date"
+            disabled={isOneWay}
+            onDateChange={handleArrivalDateChange}
+          />
         </div>
       </div>
       <div className="form-row">
         <div className="form-group">
           <Label>Departure Time</Label>
-          <Select>
+          <Select onValueChange={(value) => setDepartureTime(value)}>
             <SelectTrigger className="w-[17.5rem]">
               <SelectValue placeholder="Time" />
             </SelectTrigger>
@@ -70,7 +141,7 @@ const FlightForm = ({ isOneWay }: FlightFormProps) => {
         </div>
         <div className="form-group">
           <Label>Return Time</Label>
-          <Select>
+          <Select onValueChange={(value) => setReturnTime(value)}>
             <SelectTrigger className="w-[17.5rem]" disabled={isOneWay}>
               <SelectValue placeholder="Time" />
             </SelectTrigger>
@@ -88,9 +159,17 @@ const FlightForm = ({ isOneWay }: FlightFormProps) => {
       <div className="form-row">
         <div className="form-group">
           <Label>Age</Label>
-          <Input size={31} placeholder="Enter Age" type="number" />
+          <Input
+            size={31}
+            placeholder="Enter Age"
+            type="number"
+            onChange={(e) => setAge(parseInt(e.target.value))}
+          />
         </div>
       </div>
+      <Button type="submit" size="lg" className="text-md mt-8">
+        Book Flight
+      </Button>
     </form>
   );
 };
