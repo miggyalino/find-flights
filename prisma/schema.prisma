@@ -17,7 +17,10 @@ model Flights {
   id          String      @id @default(uuid())
   origin      String
   destination String
-  time        String
+  departureDate  DateTime
+  returnDate   DateTime?
+  departureTime        String
+  returnTime           String?
   age         Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -2,16 +2,13 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import OneWayForm from "./OneWayForm";
-import RoundTripForm from "./RoundTripForm";
-import MultiCityForm from "./MultiCityForm";
+import FlightForm from "./FlightForm";
 
 const BookFlight = () => {
   const [formState, setFormState] = useState("One-way");
@@ -19,7 +16,7 @@ const BookFlight = () => {
   return (
     <Card>
       <CardHeader className="bg-yellow-500 rounded-lg">
-        <CardTitle className="flex items-center gap-16">
+        <CardTitle className="flexAround gap-16">
           <div className="">
             <p className="text-3xl">Book your flights</p>
           </div>
@@ -40,24 +37,15 @@ const BookFlight = () => {
             >
               <p className="text-lg">Round Trip</p>
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setFormState("Multi-city");
-              }}
-            >
-              <p className="text-lg">Multi-city</p>
-            </Button>
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        {formState === "One-way" && <OneWayForm />}
-        {formState === "Round Trip" && <RoundTripForm />}
-        {formState === "Multi-city" && <MultiCityForm />}
+      <CardContent className="mt-8">
+        {formState === "One-way" && <FlightForm isOneWay={true} />}
+        {formState === "Round Trip" && <FlightForm />}
       </CardContent>
       <CardFooter>
-        <Button size="lg" className="text-xl">
+        <Button size="lg" className="text-md">
           Book Flight
         </Button>
       </CardFooter>

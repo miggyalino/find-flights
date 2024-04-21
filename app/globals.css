@@ -94,4 +94,12 @@
   .flexEnd {
     @apply flex items-center justify-end;
   }
+
+  .form-row {
+    @apply flex gap-4 mt-4;
+  }
+
+  .form-group {
+    @apply flex flex-col gap-1;
+  }
 }
