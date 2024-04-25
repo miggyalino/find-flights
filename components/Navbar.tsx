@@ -6,13 +6,13 @@ import { useState } from "react";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-100 py-2">
+    <nav className="bg-white-200 py-2">
       <div className="max-container padding-container flexBetween">
-        <div>
+        <Link href="/">
           <p className="font-bold text-xl">
             Flight <span className="text-slate-900">Finder</span>
           </p>
-        </div>
+        </Link>
         <div className="lg:hidden">
           <Sidebar />
         </div>

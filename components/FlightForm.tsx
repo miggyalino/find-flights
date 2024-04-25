@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/select";
 import { fetchAirports } from "@/utils/fetchUtils";
 import { Airport } from "@/types";
-import { get } from "http";
 import { Button } from "./ui/button";
+import { redirect, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface FlightFormProps {
   isOneWay?: boolean;
@@ -20,14 +21,15 @@ interface FlightFormProps {
 }
 
 const FlightForm = ({ isOneWay, flightType }: FlightFormProps) => {
-  const [airports, setAirports] = useState<Airport[]>([]);
+  const router = useRouter();
 
+  const [airports, setAirports] = useState<Airport[]>([]);
   const [departureAirport, setDepartureAirport] = useState<string>("");
   const [arrivalAirport, setArrivalAirport] = useState<string | null>("");
   const [departureDate, setDepartureDate] = useState<Date>();
-  const [returnDate, setReturnDate] = useState<Date | null>();
+  const [returnDate, setReturnDate] = useState<Date>();
   const [departureTime, setDepartureTime] = useState<string>("");
-  const [returnTime, setReturnTime] = useState<string | null>();
+  const [returnTime, setReturnTime] = useState<string>();
   const [age, setAge] = useState<number | null>(null);
 
   useEffect(() => {
@@ -58,6 +60,8 @@ const FlightForm = ({ isOneWay, flightType }: FlightFormProps) => {
           flightType,
         }),
       });
+      toast("Flight Booked successfully!");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -68,7 +72,7 @@ const FlightForm = ({ isOneWay, flightType }: FlightFormProps) => {
   };
 
   const handleArrivalDateChange = (newDate: Date | undefined) => {
-    setDepartureDate(newDate);
+    setReturnDate(newDate);
   };
 
   return (

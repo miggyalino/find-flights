@@ -14,7 +14,7 @@ const BookFlight = () => {
   const [formState, setFormState] = useState("One-way");
 
   return (
-    <Card>
+    <Card className="">
       <CardHeader className="bg-yellow-500 rounded-lg">
         <CardTitle className="flexAround gap-16">
           <div className="">
